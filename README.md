@@ -33,26 +33,23 @@ Cables, protoboard y resistencias.
 
 (Opcional pero recomendado) Un filtro polarizador para la lente de la cámara.
 
-📂 Estructura del Repositorio
-.
-├── clasificador_banda.py   # Script principal de control e inferencia (Raspberry Pi)
-├── train.py                # Script de entrenamiento (PC)
-├── test_model.py           # Script de prueba del modelo .tflite (PC)
-├── fruit_model.tflite      # EL MODELO FINAL (copiar a la Pi)
-│
-├── requirements_pc.txt     # Dependencias de Python para la PC (Entrenamiento)
-├── requirements_pi.txt     # Dependencias de Python para la Raspberry Pi (Control)
-│
-├── dataset/                # (IGNORADO POR GIT) Carpeta para imágenes
-│   ├── train/
-│   │   ├── cereza_buena/
-│   │   ├── cereza_mala/
-│   │   └── ...
-│   └── validation/
-│       ├── cereza_buena/
-│       └── ...
-│
-└── README.md               # Este archivo
+## 📂 Estructura del Repositorio
+
+* `clasificador_banda.py` - Script principal de control e inferencia (Raspberry Pi)
+* `train.py` - Script de entrenamiento (PC)
+* `test_model.py` - Script de prueba del modelo .tflite (PC)
+* `fruit_model.tflite` - EL MODELO FINAL (copiar a la Pi)
+* `requirements_pc.txt` - Dependencias de Python para la PC (Entrenamiento)
+* `requirements_pi.txt` - Dependencias de Python para la Raspberry Pi (Control)
+* `README.md` - Este archivo
+* `dataset/` (Ignorado por Git)
+    * `train/`
+        * `cereza_buena/`
+        * `cereza_mala/`
+        * `...`
+    * `validation/`
+        * `cereza_buena/`
+        * `...`
 
 ⚙️ Software e Instalación
 Este proyecto tiene dos entornos separados: la PC de Entrenamiento y la Raspberry Pi de Despliegue.
