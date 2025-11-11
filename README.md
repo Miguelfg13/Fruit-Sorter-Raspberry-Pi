@@ -38,26 +38,28 @@ El sistema **identifica si la fruta está en buen o mal estado** y acciona **ser
 ## 📂 Estructura del Repositorio
 
 ```
+.
+├── clasificador_banda.py   # Script principal de control e inferencia (Raspberry Pi)
+├── train.py                # Script de entrenamiento (PC)
+├── test_model.py           # Script de prueba del modelo .tflite (PC)
+├── fruit_model.tflite      # EL MODELO FINAL (copiar a la Pi)
+│
+├── requirements_pc.txt     # Dependencias de Python para la PC (Entrenamiento)
+├── requirements_pi.txt     # Dependencias de Python para la Raspberry Pi (Control)
+│
+├── dataset/                # (IGNORADO POR GIT) Carpeta para imágenes
+│   ├── train/
+│   │   ├── cereza_buena/
+│   │   ├── cereza_mala/
+│   │   └── ...
+│   └── validation/
+│       ├── cereza_buena/
+│       └── ...
+│
+└── README.md               # Este archivo
+```
 
-├── clasificador_banda.py        # Script principal de control e inferencia (Raspberry Pi)
-├── train.py                     # Entrenamiento del modelo (PC)
-├── test_model.py                # Prueba del modelo .tflite (PC)
-├── fruit_model.tflite           # Modelo final (copiar a la Pi)
-├── requirements_pc.txt          # Dependencias para PC (entrenamiento)
-├── requirements_pi.txt          # Dependencias para Raspberry Pi (despliegue)
-├── README.md                    # Este archivo
-└── dataset/                     # Dataset (ignorado por Git)
-├── train/
-│   ├── cereza_buena/
-│   ├── cereza_mala/
-│   └── ...
-└── validation/
-├── cereza_buena/
-└── ...
-
-````
-
----
+-----
 
 ## ⚙️ Software e Instalación
 
