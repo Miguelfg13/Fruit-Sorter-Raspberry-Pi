@@ -1,191 +1,241 @@
-🍓 Clasificador de Frutas en Cinta Transportadora (Raspberry Pi + TFLite)
-Este proyecto es un sistema completo de visión artificial e IoT industrial para clasificar frutas (cerezas y fresas) en una banda transportadora. Utiliza un modelo de Deep Learning (MobileNetV2) entrenado con TensorFlow/Keras y desplegado en una Raspberry Pi para control de hardware en tiempo real.
 
-El sistema identifica si la fruta está en buen o mal estado y acciona servomotores para desviarla a la línea de calidad correspondiente.
+# 🍓 Clasificador de Frutas en Cinta Transportadora (Raspberry Pi + TFLite)
 
-🚀 Características
-Clasificación de 4 Clases: cereza_buena, cereza_mala, fresa_buena, fresa_mala.
+Este proyecto es un sistema completo de **visión artificial e IoT industrial** para clasificar frutas (cerezas y fresas) en una banda transportadora.  
+Utiliza un modelo de *Deep Learning* (**MobileNetV2**) entrenado con **TensorFlow/Keras** y desplegado en una **Raspberry Pi** para el control de hardware en tiempo real.
 
-Modelo de Alta Precisión: Logra +95% de precisión gracias a una arquitectura de transfer learning afinada.
+El sistema **identifica si la fruta está en buen o mal estado** y acciona **servomotores** para desviarla a la línea de calidad correspondiente.
 
-Inferencia Eficiente: Utiliza un modelo TensorFlow Lite (.tflite) optimizado para una rápida ejecución en la CPU de la Raspberry Pi.
+---
 
-Control de Hardware (GPIO):
+## 🚀 Características
 
-Lee un sensor de proximidad para detener la banda cuando llega una fruta.
+- **Clasificación de 4 clases:**  
+  `cereza_buena`, `cereza_mala`, `fresa_buena`, `fresa_mala`.
+- **Modelo de alta precisión:**  
+  Logra más del **95% de exactitud** gracias al uso de *transfer learning*.
+- **Inferencia eficiente:**  
+  Usa un modelo **TensorFlow Lite (.tflite)** optimizado para ejecución en CPU.
+- **Control de hardware (GPIO):**
+  - Lee un **sensor de proximidad** para detener la banda al detectar una fruta.  
+  - Controla un **relé** para detener/arrancar el motor de la banda.  
+  - Controla **dos servomotores** para clasificar las frutas buenas.
 
-Controla un relé para detener/arrancar el motor de la banda transportadora.
+---
 
-Controla dos servomotores para clasificar físicamente las frutas buenas.
+## 🛠️ Hardware Requerido
 
-🛠️ Hardware Requerido
-Raspberry Pi (3B+, 4, o superior)
+- Raspberry Pi (3B+, 4 o superior)
+- Webcam (USB o módulo de cámara Pi)
+- Sensor de proximidad (Ej. IR)
+- 1x Relé de 1 canal (para el motor)
+- 2x Servomotores (Ej. SG90 o MG90S)
+- Cables, protoboard y resistencias
+- *(Opcional pero recomendado)* Filtro polarizador para la cámara
 
-Webcam (USB o Módulo de Cámara Pi)
-
-Sensor de proximidad (Ej. IR)
-
-1x Relé de 1 canal (para el motor de la banda)
-
-2x Servomotores (Ej. SG90 o MG90S)
-
-Cables, protoboard y resistencias.
-
-(Opcional pero recomendado) Un filtro polarizador para la lente de la cámara.
+---
 
 ## 📂 Estructura del Repositorio
 
-* `clasificador_banda.py` - Script principal de control e inferencia (Raspberry Pi)
-* `train.py` - Script de entrenamiento (PC)
-* `test_model.py` - Script de prueba del modelo .tflite (PC)
-* `fruit_model.tflite` - EL MODELO FINAL (copiar a la Pi)
-* `requirements_pc.txt` - Dependencias de Python para la PC (Entrenamiento)
-* `requirements_pi.txt` - Dependencias de Python para la Raspberry Pi (Control)
-* `README.md` - Este archivo
-* `dataset/` (Ignorado por Git)
-    * `train/`
-        * `cereza_buena/`
-        * `cereza_mala/`
-        * `...`
-    * `validation/`
-        * `cereza_buena/`
-        * `...`
+```
 
-⚙️ Software e Instalación
-Este proyecto tiene dos entornos separados: la PC de Entrenamiento y la Raspberry Pi de Despliegue.
+├── clasificador_banda.py        # Script principal de control e inferencia (Raspberry Pi)
+├── train.py                     # Entrenamiento del modelo (PC)
+├── test_model.py                # Prueba del modelo .tflite (PC)
+├── fruit_model.tflite           # Modelo final (copiar a la Pi)
+├── requirements_pc.txt          # Dependencias para PC (entrenamiento)
+├── requirements_pi.txt          # Dependencias para Raspberry Pi (despliegue)
+├── README.md                    # Este archivo
+└── dataset/                     # Dataset (ignorado por Git)
+├── train/
+│   ├── cereza_buena/
+│   ├── cereza_mala/
+│   └── ...
+└── validation/
+├── cereza_buena/
+└── ...
 
-1. En tu PC (Para Entrenamiento)
-Se usa para entrenar el modelo. Necesita la versión de escritorio completa de TensorFlow y OpenCV.
+````
 
-Bash
+---
 
-# Se recomienda usar un entorno virtual
+## ⚙️ Software e Instalación
+
+Este proyecto se divide en dos entornos:
+
+1. **PC (Entrenamiento del modelo)**
+2. **Raspberry Pi (Despliegue en tiempo real)**
+
+---
+
+### 🧠 1. En tu PC — *Entrenamiento del modelo*
+
+Se usa para entrenar la red neuronal con TensorFlow y OpenCV.
+
+```bash
+# Recomendado: crear un entorno virtual
 python -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
 
-# Instala las dependencias
+# Instalar dependencias
 pip install -r requirements_pc.txt
-Contenido de requirements_pc.txt: (¡Las versiones son importantes para evitar conflictos!)
+````
 
-Plaintext
+**Contenido de `requirements_pc.txt`:**
 
+```plaintext
 tensorflow==2.19.0
 numpy==2.1.3
 opencv-python==4.12.0.88
 matplotlib
 scikit-learn
 seaborn
-2. En tu Raspberry Pi (Para Despliegue)
-Se usa para correr la banda. Utiliza tflite-runtime (más ligero) y opencv-headless (sin interfaz gráfica).
+```
 
-Bash
+---
 
-# Instala las dependencias en tu Pi
+### 🤖 2. En tu Raspberry Pi — *Despliegue del modelo*
+
+Usa una versión ligera del runtime de TensorFlow (tflite-runtime) y OpenCV sin interfaz gráfica.
+
+```bash
+# Instalar dependencias
 pip3 install -r requirements_pi.txt
-Contenido de requirements_pi.txt:
+```
 
-Plaintext
+**Contenido de `requirements_pi.txt`:**
 
+```plaintext
 tflite-runtime
 opencv-python-headless
 numpy
 RPi.GPIO
-🏁 Flujo de Trabajo
-Paso 1: Entrenamiento (en PC)
-Prepara tu Dataset: Asegúrate de que tu carpeta dataset/ tenga la estructura de train y validation mostrada arriba.
+```
 
-Ejecuta el Entrenamiento:
+---
 
-Bash
+## 🏁 Flujo de Trabajo
 
-python train.py
-Resultado: El script entrenará el modelo, guardará gráficos y, lo más importante, creará fruit_model.tflite en la carpeta raíz.
+### 🔹 Paso 1: Entrenamiento (PC)
 
-Paso 2: Prueba (en PC)
-Verifica que el modelo .tflite funciona correctamente antes de moverlo a la Pi.
+1. Prepara tu carpeta `dataset/` con la estructura `train/` y `validation/`.
+2. Ejecuta el entrenamiento:
 
-Bash
+   ```bash
+   python train.py
+   ```
 
+   **Resultado:**
+   Se guardará el modelo `fruit_model.tflite` en la carpeta raíz junto con los gráficos de rendimiento.
+
+---
+
+### 🔹 Paso 2: Prueba del Modelo (PC)
+
+Verifica el modelo antes de transferirlo a la Pi:
+
+```bash
 # Probar con una imagen aleatoria del dataset
 python test_model.py
 
-# Probar con una imagen específica
+# O con una imagen específica
 python test_model.py "dataset/validation/fresa_buena/img_001.jpg"
-El script mostrará la predicción en la terminal y abrirá una ventana de OpenCV con la imagen.
+```
 
-Paso 3: Despliegue (en Raspberry Pi)
-Copia los archivos a tu Raspberry Pi (usando scp, una USB, etc.):
+El script mostrará la predicción y abrirá una ventana de OpenCV con la imagen.
 
-fruit_model.tflite
+---
 
-clasificador_banda.py
+### 🔹 Paso 3: Despliegue (Raspberry Pi)
 
-Configura los Pines: Abre clasificador_banda.py y ajusta los números de pin GPIO en la sección CONFIGURACIÓN DE HARDWARE para que coincidan con tus conexiones.
+1. Copia los siguientes archivos a tu Raspberry Pi:
 
-¡Ejecuta el Sistema!
+   * `fruit_model.tflite`
+   * `clasificador_banda.py`
 
-Bash
+2. Configura los pines GPIO en `clasificador_banda.py` según tus conexiones físicas.
 
-python3 clasificador_banda.py
-El script se inicializará, encenderá la banda y esperará a que el sensor detecte la primera fruta.
+3. Ejecuta el sistema:
 
-🚨 Consideraciones Clave y Lecciones Aprendidas
-Esta sección documenta los problemas críticos encontrados y sus soluciones, sirviendo como registro de optimización.
+   ```bash
+   python3 clasificador_banda.py
+   ```
 
-1. EL ERROR CRÍTICO: Doble Normalización (Precisión del 31%)
-Problema: El modelo inicial tenía una precisión de solo 31%.
+El sistema se inicializará, encenderá la banda y esperará a que el sensor detecte la primera fruta.
 
-Causa: Estábamos normalizando los datos dos veces.
+---
 
-ImageDataGenerator(rescale=1./255) convertía los píxeles de [0, 255] a [0, 1].
+## 🚨 Consideraciones Clave y Lecciones Aprendidas
 
-La capa keras.applications.mobilenet_v2.preprocess_input (que está dentro del modelo) esperaba [0, 255] para convertirlos a [-1, 1].
+### 1️⃣ Doble Normalización (Precisión del 31%)
 
-Solución: Eliminar rescale=1./255 del ImageDataGenerator. El modelo TFLite ahora incluye la capa de preprocesamiento y solo espera la imagen en bruto (formato float32 de 0 a 255).
+* **Problema:** El modelo inicial tenía una precisión baja (~31%).
+* **Causa:** Se aplicó normalización doble (`rescale=1./255` + `preprocess_input`).
+* **Solución:** Eliminar `rescale=1./255` del `ImageDataGenerator`.
+  El modelo ahora espera imágenes en formato float32 [0,255].
 
-2. El "Infierno de Dependencias" en PC
-Problema: tensorflow y opencv-python tienen requisitos de numpy conflictivos.
+---
 
-Contexto: tensorflow 2.19.0 requiere numpy < 2.2.0, pero opencv-python 4.12.0 requiere numpy >= 2.0.
+### 2️⃣ Conflictos de Dependencias (PC)
 
-Solución: Encontrar una versión "puente". Se determinó que numpy==2.1.3 es compatible con ambos paquetes. Las versiones exactas están fijadas en requirements_pc.txt.
+* **Problema:** `tensorflow` y `opencv-python` exigían versiones distintas de `numpy`.
+* **Solución:** Usar `numpy==2.1.3`, compatible con ambas librerías.
 
-3. Error cv2.imshow (Headless vs. Desktop)
-Problema: El script test_model.py fallaba con error: The function is not implemented... in function 'cvShowImage'.
+---
 
-Causa: Instalación de opencv-python-headless. Esta versión no incluye soporte para interfaces gráficas (GUI) y no puede abrir ventanas.
+### 3️⃣ Error `cv2.imshow` (Entornos Headless)
 
-Solución: La PC de desarrollo DEBE usar opencv-python (la versión de escritorio completa). La Raspberry Pi DEBE usar opencv-python-headless (más ligera, no necesita GUI).
+* **Causa:** La versión `opencv-python-headless` no soporta GUI.
+* **Solución:**
 
-4. tflite-runtime vs. tensorflow.lite
-Problema: El script test_model.py fallaba en la PC con ModuleNotFoundError: No module named 'tflite_runtime'.
+  * En PC: usar `opencv-python`
+  * En Raspberry Pi: usar `opencv-python-headless`
 
-Causa: tflite-runtime es un paquete separado solo para inferencia (usado en la Pi). El paquete completo de tensorflow (usado en la PC) contiene esta funcionalidad en tensorflow.lite.
+---
 
-Solución: Los scripts (test_model.py y clasificador_banda.py) usan un bloque try/except para importar el módulo correcto según el entorno, haciéndolos portables.
+### 4️⃣ `tflite-runtime` vs `tensorflow.lite`
 
-5. Consideraciones Físicas (Hardware)
-Problema: Las imágenes de la banda transportadora muestran muchos reflejos de luz (brillo especular) sobre la fruta y el metal.
+* **Problema:** `ModuleNotFoundError: No module named 'tflite_runtime'` en PC.
+* **Solución:**
+  Los scripts usan un bloque `try/except` para importar automáticamente la versión correcta.
 
-Riesgo: Un reflejo blanco puede ser confundido por la red con un hongo o una "mancha mala", o puede ocultar defectos reales.
+---
 
-Solución (Recomendada):
+### 5️⃣ Consideraciones Físicas (Hardware)
 
-Filtro Polarizador: Colocar un filtro polarizador en la lente de la cámara es la mejor solución para eliminar casi todos los reflejos.
+* **Problema:** Reflejos de luz en la fruta o el metal.
+* **Riesgo:** Los reflejos pueden confundir a la red o ocultar defectos.
+* **Soluciones:**
 
-Iluminación Difusa: Usar luces más suaves o rebotadas en lugar de un foco directo.
+  * Usar **filtro polarizador** en la cámara.
+  * Emplear **iluminación difusa** o rebotada.
 
-6. Arquitectura del Modelo
-Problema: Un modelo con muchas capas densas (Dense(256), Dense(128)) después del modelo base (MobileNetV2) puede ser propenso a sobreajuste (overfitting), especialmente con un dataset industrial pequeño.
+---
 
-Solución: La arquitectura del modelo fue simplificada a:
+### 6️⃣ Arquitectura del Modelo
 
-base_model (MobileNetV2)
+**Problema:** Modelos con muchas capas densas provocaban *overfitting*.
+**Solución:** Simplificar la arquitectura:
 
-GlobalAveragePooling2D()
+```python
+base_model = MobileNetV2(...)
+x = GlobalAveragePooling2D()(base_model.output)
+x = Dropout(0.5)(x)
+outputs = Dense(4, activation='softmax')(x)
+model = Model(inputs=base_model.input, outputs=outputs)
+```
 
-Dropout(0.5) (Para regularización fuerte)
+**Resultado:** Modelo más ligero, rápido y con mejor generalización.
 
-Dense(4, activation='softmax') (Capa de salida directa)
+---
 
-Resultado: Un modelo más ligero, más rápido y que generaliza mejor.
+## 📸 Créditos y Licencia
+
+Proyecto desarrollado por **Miguel Flores**  
+
+[![Licencia MIT](https://img.shields.io/badge/Licencia-MIT-green.svg)](LICENSE)
+![Hecho con ❤️](https://img.shields.io/badge/Hecho%20con-%E2%9D%A4-red)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-orange)
+![Raspberry%20Pi](https://img.shields.io/badge/Raspberry%20Pi-red)
+
+
